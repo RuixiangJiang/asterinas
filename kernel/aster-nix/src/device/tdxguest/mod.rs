@@ -69,7 +69,9 @@ impl FileIo for TdxGuest {
         match cmd {
             IoctlCmd::TDXGETREPORT => {
                 let tdx_report: TdxReportRequest = read_val_from_user(arg)?;
-                match get_report(&tdx_report.tdreport, &tdx_report.reportdata) {
+                let tdreport_ptr = tdx_report.tdreport.as_ptr() as u64;
+                let reportdata_ptr = tdx_report.reportdata.as_ptr() as u64;
+                match get_report(tdreport_ptr, reportdata_ptr) {
                     Ok(_) => {}
                     Err(err) => return Err(err.into()),
                 };

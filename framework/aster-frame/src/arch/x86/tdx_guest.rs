@@ -418,7 +418,7 @@ pub unsafe fn unprotect_gpa_range(gpa: TdxGpa, page_num: usize) -> Result<(), Pa
     let vaddr = paddr_to_vaddr(gpa);
     let pt = KERNEL_PAGE_TABLE.get().unwrap();
     pt.protect(&(vaddr..page_num * PAGE_SIZE), |prop| {
-        prop = PageProperty {
+        *prop = PageProperty {
             flags: prop.flags,
             cache: prop.cache,
             priv_flags: prop.priv_flags | PrivFlags::SHARED,
@@ -454,7 +454,7 @@ pub unsafe fn protect_gpa_range(gpa: TdxGpa, page_num: usize) -> Result<(), Page
     let vaddr = paddr_to_vaddr(gpa);
     let pt = KERNEL_PAGE_TABLE.get().unwrap();
     pt.protect(&(vaddr..page_num * PAGE_SIZE), |prop| {
-        prop = PageProperty {
+        *prop = PageProperty {
             flags: prop.flags,
             cache: prop.cache,
             priv_flags: prop.priv_flags - PrivFlags::SHARED,
